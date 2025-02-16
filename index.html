@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator with Ads</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * { 
+            box-sizing: border-box;
+            max-width: 100%;
+        }
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0;
+            padding: 20px;
+            width: 100%;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+        .ad-placeholder {
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            text-align: center;
+            padding: 15px;
+            color: #666;
+            z-index: 1000;
+        }
+        /* Top & Bottom Ads */
+        .ad-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+        }
+        .ad-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+        }
+        /* Side Ads */
+        .ad-left {
+            position: fixed;
+            left: 0;
+            top: 100px;
+            height: 300px;
+            width: 160px;
+        }
+        .ad-right {
+            position: fixed;
+            right: 0;
+            top: 100px;
+            height: 300px;
+            width: 160px;
+        }
+        .main-content {
+            margin: 120px 180px 140px; /* Adjusted for smaller side ads */
+            min-width: 300px;
+        }
+        .container { 
+            background-color: #f9f9f9; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+        }
+        #qrcode { 
+            margin: 20px auto; 
+            position: relative; 
+            width: 256px; 
+            height: 256px; 
+        }
+        .logo-overlay { 
+            position: absolute; 
+            width: 20%; 
+            height: 20%; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            border-radius: 50%; 
+            overflow: hidden; 
+            object-fit: cover; 
+            pointer-events: none; 
+        }
+        button { 
+            background-color: #4CAF50; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin: 10px; 
+            transition: background-color 0.3s; 
+        }
+        button:hover { background-color: #45a049; }
+        .note { 
+            color: #666; 
+            font-size: 0.9em; 
+            margin: 5px 0; 
+        }
+        .filename-input { margin-top: 15px; }
+        
+        @media (max-width: 1200px) {
+            .ad-left, .ad-right {
+                display: none;
+            }
+            .main-content {
+                margin: 120px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Ad -->
+    <div class="ad-placeholder ad-top">
+        Top Ad (728x90)
+        <script type="text/javascript">
+	atOptions = {
+		'key' : 'f1cb21e7c61fd8cacb526e7136e5946c',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/f1cb21e7c61fd8cacb526e7136e5946c/invoke.js"></script>
+    </div>
+
+    <!-- Left Side Ad -->
+    <div class="ad-placeholder ad-left">
+        Left Side Ad (160x300)
+        <script type="text/javascript">
+	atOptions = {
+		'key' : '1097f96989cd5c3f8240227ab49aa7a7',
+		'format' : 'iframe',
+		'height' : 300,
+		'width' : 160,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/1097f96989cd5c3f8240227ab49aa7a7/invoke.js"></script>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <h1>QR Code Generator</h1>
+            <input type="text" id="qr-text" placeholder="Enter text or URL">
+            <div style="margin: 15px 0;">
+                <input type="file" id="logo-upload" accept="image/*">
+                <div class="note">Optional circular logo (20% size)</div>
+            </div>
+            <div class="filename-input">
+                <input type="text" id="qr-name" placeholder="Enter QR code name (optional)">
+                <div class="note">Allowed characters: letters, numbers, and underscores</div>
+            </div>
+            <button onclick="generateQR()">Generate QR Code</button>
+            <button onclick="downloadQR()" id="download-btn" style="display: none;">
+                Download QR Code
+            </button>
+            <div id="qrcode"></div>
+        </div>
+    </div>
+
+    <!-- Right Side Ad -->
+    <div class="ad-placeholder ad-right">
+        Right Side Ad (160x300)
+        <script type="text/javascript">
+	atOptions = {
+		'key' : '1097f96989cd5c3f8240227ab49aa7a7',
+		'format' : 'iframe',
+		'height' : 300,
+		'width' : 160,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/1097f96989cd5c3f8240227ab49aa7a7/invoke.js"></script>
+    </div>
+
+    <!-- Bottom Ad -->
+    <div class="ad-placeholder ad-bottom">
+        Bottom Ad (728x90)
+        <script type="text/javascript">
+	atOptions = {
+		'key' : 'f1cb21e7c61fd8cacb526e7136e5946c',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/f1cb21e7c61fd8cacb526e7136e5946c/invoke.js"></script>
+    </div>
+
+    <script>
+        let qrCode = null;
+        let currentLogo = null;
+
+        function generateQR() {
+            const text = document.getElementById('qr-text').value;
+            const qrcodeDiv = document.getElementById('qrcode');
+            const logoFile = document.getElementById('logo-upload').files[0];
+
+            if (!text) return alert('Please enter content for the QR code');
+
+            qrcodeDiv.innerHTML = '';
+            if (currentLogo) currentLogo.remove();
+
+            qrCode = new QRCode(qrcodeDiv, {
+                text: text,
+                width: 256,
+                height: 256,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            if (logoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        currentLogo = document.createElement('img');
+                        currentLogo.src = e.target.result;
+                        currentLogo.className = 'logo-overlay';
+                        qrcodeDiv.appendChild(currentLogo);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(logoFile);
+            }
+
+            document.getElementById('download-btn').style.display = 'inline-block';
+        }
+
+        function downloadQR() {
+            try {
+                const canvas = document.querySelector('#qrcode canvas');
+                if (!canvas) throw new Error('QR Code not generated yet!');
+
+                const tempCanvas = document.createElement('canvas');
+                const ctx = tempCanvas.getContext('2d');
+                const scale = 4;
+                tempCanvas.width = canvas.width * scale;
+                tempCanvas.height = canvas.height * scale;
+                ctx.scale(scale, scale);
+                ctx.drawImage(canvas, 0, 0);
+
+                const logo = document.querySelector('.logo-overlay');
+                if (logo) {
+                    ctx.drawImage(logo, 
+                        canvas.width / 2 - logo.width / 2, 
+                        canvas.height / 2 - logo.height / 2, 
+                        logo.width, 
+                        logo.height
+                    );
+                }
+
+                const link = document.createElement('a');
+                link.download = getFileName();
+                link.href = tempCanvas.toDataURL('image/png');
+                link.click();
+
+            } catch (error) {
+                alert('Download error: ' + error.message);
+            }
+        }
+
+        function getFileName() {
+            let filename = document.getElementById('qr-name').value.trim();
+            filename = filename.replace(/[^a-zA-Z0-9_]/g, '_')
+                              .replace(/_+/g, '_')
+                              .replace(/^_+|_+$/g, '') || 'qrcode';
+            return filename + '.png';
+        }
+    </script>
+</body>
+</html>
