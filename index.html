@@ -20,6 +20,7 @@
             min-height: 100vh;
         }
         .ad-placeholder {
+            display: none; /* Make placeholders invisible by default */
             background: #f0f0f0;
             border: 2px dashed #ccc;
             text-align: center;
@@ -284,6 +285,16 @@
                               .replace(/_+/g, '_')
                               .replace(/^_+|_+$/g, '') || 'qrcode';
             return filename + '.png';
+        }
+
+        // Function to show ad placeholders when actual codes are added
+        function showAds() {
+            const ads = document.querySelectorAll('.ad-placeholder');
+            ads.forEach(ad => {
+                if (ad.textContent.trim() !== "Replace with actual ad code") {
+                    ad.style.display = 'block'; // Show ad if code is provided
+                }
+            });
         }
     </script>
 </body>
